@@ -53,11 +53,13 @@ activityLabels <- read.table("activity_labels.txt", col.names = c("row", "activi
 featureset <- read.table("features.txt")
 features <- as.character(featureset[,2])
 
-
+## set Activity and Subject columns in fullset to factors for further aggregation.
 fullset$Activity <- factor(fullset$Activity, levels = activityLabels$row, labels = activityLabels$activity)
 fullset$Subjects <- as.factor(fullset$Subjects)
 
+## transform output set to gain means per activity and subject
 fullset.melted <- melt(fullset, id = c("Activity", "Subjects"))
 fullset.mean <- dcast(fullset.melted, Subjects + Activity ~ variable, mean)
 
+## write final dataset out to file.
 write.table(fullset.mean, "../workfolder/tidyset.txt", row.names = FALSE, quote = FALSE)
